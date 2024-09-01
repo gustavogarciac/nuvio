@@ -1,3 +1,4 @@
+import { useAuthActions } from '@convex-dev/auth/react'
 import React, { useState } from 'react'
 import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
@@ -20,8 +21,13 @@ type Props = {
 }
 
 export const SignInCard = ({ setState }: Props) => {
+  const { signIn } = useAuthActions()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+
+  const handleProviderSignIn = (value: 'github' | 'google') => {
+    signIn(value)
+  }
 
   return (
     <Card className="h-full w-full p-8">
@@ -72,7 +78,7 @@ export const SignInCard = ({ setState }: Props) => {
             size={'lg'}
             className="relative w-full"
             disabled={false}
-            onClick={() => {}}
+            onClick={() => handleProviderSignIn('github')}
           >
             <FaGithub className="absolute bottom-1/2 left-2.5 top-1/2 size-5 -translate-y-1/2" />
             Continuar com GitHub
