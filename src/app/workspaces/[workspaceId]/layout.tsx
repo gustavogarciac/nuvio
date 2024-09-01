@@ -1,6 +1,7 @@
 import { Metadata } from 'next'
 import React from 'react'
 
+import { Sidebar } from './_components/sidebar'
 import { Toolbar } from './_components/toolbar'
 
 type Props = {
@@ -15,7 +16,10 @@ const WorkspaceIdLayout = ({ children }: Props) => {
   return (
     <div className="h-full">
       <Toolbar />
-      <div className="flex h-[calc-(100vh-40px)]">{children}</div>
+      <div className="flex h-[calc(100vh-40px)]">
+        <Sidebar />
+        {children}
+      </div>
     </div>
   )
 }
