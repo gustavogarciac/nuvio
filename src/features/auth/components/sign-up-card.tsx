@@ -1,4 +1,7 @@
+import { useAuthActions } from '@convex-dev/auth/react'
+import { TriangleAlert } from 'lucide-react'
 import React, { useState } from 'react'
+import { CgSpinner } from 'react-icons/cg'
 import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 
@@ -20,9 +23,38 @@ type Props = {
 }
 
 export const SignUpCard = ({ setState }: Props) => {
+  const { signIn } = useAuthActions()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleProviderSignIn = (value: 'github' | 'google') => {
+    try {
+      setPending(true)
+      signIn(value)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setPending(false)
+    }
+  }
+
+  const onPasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (password !== confirmPassword) {
+      setError('As senhas não coincidem')
+    }
+
+    setPending(true)
+    signIn('password', { email, password, flow: 'signUp' })
+      .catch((err) => {
+        console.log(err)
+        setError('Ocorreu um erro.')
+      })
+      .finally(() => setPending(false))
+  }
 
   return (
     <Card className="h-full w-full p-8">
@@ -32,10 +64,16 @@ export const SignUpCard = ({ setState }: Props) => {
           Use o seu email ou outro serviço para continuar.
         </CardDescription>
       </CardHeader>
+      {!!error && (
+        <div className="mb-6 flex items-center gap-x-2 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-2.5">
+        <form onSubmit={onPasswordSignUp} className="space-y-2.5">
           <Input
-            disabled={false}
+            disabled={pending}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
@@ -43,7 +81,7 @@ export const SignUpCard = ({ setState }: Props) => {
             required
           />
           <Input
-            disabled={false}
+            disabled={pending}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Senha"
@@ -51,15 +89,19 @@ export const SignUpCard = ({ setState }: Props) => {
             required
           />
           <Input
-            disabled={false}
+            disabled={pending}
             value={confirmPassword}
             onChange={(e) => setConfirmPassword(e.target.value)}
             placeholder="Confirmar senha"
             type="password"
             required
           />
-          <Button type="submit" size="lg" className="w-full" disabled={false}>
-            Continuar
+          <Button type="submit" size="lg" className="w-full" disabled={pending}>
+            {pending ? (
+              <CgSpinner className="-ml-1 mr-3 h-5 w-5 animate-spin" />
+            ) : (
+              'Continuar'
+            )}
           </Button>
         </form>
 
@@ -70,8 +112,8 @@ export const SignUpCard = ({ setState }: Props) => {
             variant="outline"
             size={'lg'}
             className="relative w-full"
-            disabled={false}
-            onClick={() => {}}
+            disabled={pending}
+            onClick={() => handleProviderSignIn('google')}
           >
             <FcGoogle className="absolute bottom-1/2 left-2.5 top-1/2 size-5 -translate-y-1/2" />
             Continuar com Google
@@ -80,8 +122,8 @@ export const SignUpCard = ({ setState }: Props) => {
             variant="outline"
             size={'lg'}
             className="relative w-full"
-            disabled={false}
-            onClick={() => {}}
+            disabled={pending}
+            onClick={() => handleProviderSignIn('github')}
           >
             <FaGithub className="absolute bottom-1/2 left-2.5 top-1/2 size-5 -translate-y-1/2" />
             Continuar com GitHub

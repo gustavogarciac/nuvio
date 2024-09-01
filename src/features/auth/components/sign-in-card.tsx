@@ -1,5 +1,7 @@
 import { useAuthActions } from '@convex-dev/auth/react'
+import { TriangleAlert } from 'lucide-react'
 import React, { useState } from 'react'
+import { CgSpinner } from 'react-icons/cg'
 import { FaGithub } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
 
@@ -25,6 +27,7 @@ export const SignInCard = ({ setState }: Props) => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [pending, setPending] = useState(false)
+  const [error, setError] = useState('')
 
   const handleProviderSignIn = (value: 'github' | 'google') => {
     try {
@@ -37,6 +40,18 @@ export const SignInCard = ({ setState }: Props) => {
     }
   }
 
+  const onCredentialsSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+
+    setPending(true)
+
+    signIn('password', { email, password, flow: 'signIn' })
+      .catch(() => {
+        setError('Credenciais inválidas.')
+      })
+      .finally(() => setPending(false))
+  }
+
   return (
     <Card className="h-full w-full p-8">
       <CardHeader className="px-0 pt-0">
@@ -45,8 +60,14 @@ export const SignInCard = ({ setState }: Props) => {
           Use o seu email ou outro serviço para continuar.
         </CardDescription>
       </CardHeader>
+      {!!error && (
+        <div className="mb-6 flex items-center gap-x-2 rounded-md bg-destructive/15 p-3 text-sm text-destructive">
+          <TriangleAlert className="size-4" />
+          <p>{error}</p>
+        </div>
+      )}
       <CardContent className="space-y-5 px-0 pb-0">
-        <form className="space-y-2.5">
+        <form onSubmit={onCredentialsSignIn} className="space-y-2.5">
           <Input
             disabled={pending}
             value={email}
@@ -64,7 +85,11 @@ export const SignInCard = ({ setState }: Props) => {
             required
           />
           <Button type="submit" size="lg" className="w-full" disabled={pending}>
-            Continuar
+            {pending ? (
+              <CgSpinner className="-ml-1 mr-3 h-5 w-5 animate-spin" />
+            ) : (
+              'Continuar'
+            )}
           </Button>
         </form>
 
@@ -89,7 +114,7 @@ export const SignInCard = ({ setState }: Props) => {
             onClick={() => handleProviderSignIn('github')}
           >
             <FaGithub className="absolute bottom-1/2 left-2.5 top-1/2 size-5 -translate-y-1/2" />
-            {pending ? 'Carregando...' : 'Continuar com GitHub'}
+            Continuar com GitHub
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
