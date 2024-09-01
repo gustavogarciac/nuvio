@@ -1,5 +1,6 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useEffect, useMemo } from 'react'
 
 import { UserButton } from '@/features/auth/components/user-button'
@@ -9,6 +10,7 @@ import { useCreateWorkspaceModal } from '@/features/workspaces/store/use-create-
 export default function Home() {
   const [open, setOpen] = useCreateWorkspaceModal()
   const { data, isLoading } = useGetWorkSpaces()
+  const { replace } = useRouter()
 
   const workspaceId = useMemo(() => data?.[0]?._id, [data])
 
@@ -16,7 +18,7 @@ export default function Home() {
     if (isLoading) return
 
     if (workspaceId) {
-      console.log('Redirect to workspace')
+      replace(`/workspaces/${workspaceId}`)
     } else if (!open) {
       setOpen(true)
     }

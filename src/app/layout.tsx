@@ -6,7 +6,7 @@ import { Inter } from 'next/font/google'
 
 import { ConvexClientProvider } from '@/components/convex-client-provider'
 import { Modals } from '@/components/modals'
-import { CreateWorkspaceModal } from '@/features/workspaces/components/create-workspace-modal'
+import { Toaster } from '@/components/ui/toaster'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -26,6 +26,7 @@ export default function RootLayout({
           <ConvexClientProvider>
             <Modals />
             {children}
+            <Toaster />
           </ConvexClientProvider>
         </body>
       </html>
