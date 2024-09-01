@@ -35,6 +35,9 @@ importers:
       convex:
         specifier: ^1.15.0
         version: 1.15.0(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
+      jotai:
+        specifier: ^2.9.3
+        version: 2.9.3(@types/react@18.3.5)(react@18.3.1)
       lucide-react:
         specifier: ^0.436.0
         version: 0.436.0(react@18.3.1)
@@ -1853,6 +1856,18 @@ packages:
 
   jose@5.8.0:
     resolution: {integrity: sha512-E7CqYpL/t7MMnfGnK/eg416OsFCVUrU/Y3Vwe7QjKhu/BkS1Ms455+2xsqZQVN57/U2MHMBvEb5SrmAZWAIntA==}
+
+  jotai@2.9.3:
+    resolution: {integrity: sha512-IqMWKoXuEzWSShjd9UhalNsRGbdju5G2FrqNLQJT+Ih6p41VNYe2sav5hnwQx4HJr25jq9wRqvGSWGviGG6Gjw==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -4501,6 +4516,11 @@ snapshots:
   jiti@1.21.6: {}
 
   jose@5.8.0: {}
+
+  jotai@2.9.3(@types/react@18.3.5)(react@18.3.1):
+    optionalDependencies:
+      '@types/react': 18.3.5
+      react: 18.3.1
 
   js-tokens@4.0.0: {}
 
