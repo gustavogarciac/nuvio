@@ -24,9 +24,17 @@ export const SignInCard = ({ setState }: Props) => {
   const { signIn } = useAuthActions()
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [pending, setPending] = useState(false)
 
   const handleProviderSignIn = (value: 'github' | 'google') => {
-    signIn(value)
+    try {
+      setPending(true)
+      signIn(value)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setPending(false)
+    }
   }
 
   return (
@@ -40,7 +48,7 @@ export const SignInCard = ({ setState }: Props) => {
       <CardContent className="space-y-5 px-0 pb-0">
         <form className="space-y-2.5">
           <Input
-            disabled={false}
+            disabled={pending}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Email"
@@ -48,14 +56,14 @@ export const SignInCard = ({ setState }: Props) => {
             required
           />
           <Input
-            disabled={false}
+            disabled={pending}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Senha"
             type="password"
             required
           />
-          <Button type="submit" size="lg" className="w-full" disabled={false}>
+          <Button type="submit" size="lg" className="w-full" disabled={pending}>
             Continuar
           </Button>
         </form>
@@ -67,8 +75,8 @@ export const SignInCard = ({ setState }: Props) => {
             variant="outline"
             size={'lg'}
             className="relative w-full"
-            disabled={false}
-            onClick={() => {}}
+            disabled={pending}
+            onClick={() => handleProviderSignIn('google')}
           >
             <FcGoogle className="absolute bottom-1/2 left-2.5 top-1/2 size-5 -translate-y-1/2" />
             Continuar com Google
@@ -77,11 +85,11 @@ export const SignInCard = ({ setState }: Props) => {
             variant="outline"
             size={'lg'}
             className="relative w-full"
-            disabled={false}
+            disabled={pending}
             onClick={() => handleProviderSignIn('github')}
           >
             <FaGithub className="absolute bottom-1/2 left-2.5 top-1/2 size-5 -translate-y-1/2" />
-            Continuar com GitHub
+            {pending ? 'Carregando...' : 'Continuar com GitHub'}
           </Button>
         </div>
         <p className="text-xs text-muted-foreground">
