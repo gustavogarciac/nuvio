@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { CgSpinner } from 'react-icons/cg'
 
@@ -14,7 +15,6 @@ import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 import { useCreateChannel } from '../api/use-create-channel'
 import { useCreateChannelModal } from '../store/use-create-channel-modal'
-import { useRouter } from 'next/navigation'
 
 export const CreateChannelModal = () => {
   const router = useRouter()
@@ -55,9 +55,9 @@ export const CreateChannelModal = () => {
           toast({
             title: 'Erro ao criar canal.',
             description: error.message,
-            variant: "destructive"
+            variant: 'destructive',
           })
-        }
+        },
       },
     )
   }
