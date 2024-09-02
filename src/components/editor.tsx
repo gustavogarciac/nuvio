@@ -15,6 +15,7 @@ import { PiTextAa } from 'react-icons/pi'
 
 import { cn } from '@/lib/utils'
 
+import { EmojiPopover } from './emoji-popover'
 import { Hint } from './hint'
 import { Button } from './ui/button'
 
@@ -138,6 +139,12 @@ const Editor = ({
     }
   }
 
+  function onEmojiSelect(emoji: { native: string }) {
+    const quill = quillRef.current
+
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native)
+  }
+
   return (
     <div className="flex flex-col">
       <div className="focus-whitin:border-slate-300 flex flex-col overflow-hidden rounded-md border border-slate-200 bg-white transition focus-within:shadow-sm">
@@ -153,16 +160,11 @@ const Editor = ({
               <PiTextAa className="size-4" />
             </Button>
           </Hint>
-          <Hint label="Emoji">
-            <Button
-              variant="ghost"
-              disabled={disabled}
-              size={'iconSm'}
-              onClick={() => {}}
-            >
+          <EmojiPopover onEmojiSelect={onEmojiSelect}>
+            <Button variant="ghost" disabled={disabled} size={'iconSm'}>
               <Smile className="size-4" />
             </Button>
-          </Hint>
+          </EmojiPopover>
           {variant === 'create' && (
             <Hint label="Imagem">
               <Button
@@ -212,11 +214,18 @@ const Editor = ({
           )}
         </div>
       </div>
-      <div className="flex justify-end p-2 text-[10px] text-muted-foreground">
-        <p>
-          <strong>Shift + Return</strong> para adicionar uma linha nova
-        </p>
-      </div>
+      {variant === 'create' && (
+        <div
+          className={cn(
+            'flex justify-end p-2 text-[10px] text-muted-foreground opacity-0 transition',
+            !isEmpty && 'opacity-100',
+          )}
+        >
+          <p>
+            <strong>Shift + Return</strong> para adicionar uma linha nova
+          </p>
+        </div>
+      )}
     </div>
   )
 }
