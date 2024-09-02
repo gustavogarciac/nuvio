@@ -12,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 
 import { Doc } from '../../../../../convex/_generated/dataModel'
+import { InviteModal } from './invite-modal'
 import { PreferencesModal } from './preferences-modal'
 
 type Props = {
@@ -20,13 +21,20 @@ type Props = {
 }
 
 export const WorkspaceHeader = ({ workspace, isAdmin }: Props) => {
-  const [open, setOpen] = useState(false)
+  const [preferencesOpen, setPreferencesOpen] = useState(false)
+  const [inviteOpen, setInviteOpen] = useState(false)
 
   return (
     <>
+      <InviteModal
+        open={inviteOpen}
+        setOpen={setInviteOpen}
+        name={workspace.name}
+        joinCode={workspace.joinCode}
+      />
       <PreferencesModal
-        open={open}
-        setOpen={setOpen}
+        open={preferencesOpen}
+        setOpen={setPreferencesOpen}
         initialValue={workspace.name}
       />
       <div className="flex h-[49px] items-center justify-between gap-0.5 px-4">
@@ -61,7 +69,7 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: Props) => {
               <>
                 <DropdownMenuItem
                   className="cursor-pointer py-2"
-                  onClick={() => {}}
+                  onClick={() => setInviteOpen(true)}
                 >
                   Convide membros para {workspace.name}
                 </DropdownMenuItem>
@@ -70,7 +78,7 @@ export const WorkspaceHeader = ({ workspace, isAdmin }: Props) => {
 
                 <DropdownMenuItem
                   className="cursor-pointer py-2"
-                  onClick={() => setOpen(true)}
+                  onClick={() => setPreferencesOpen(true)}
                 >
                   Preferências
                 </DropdownMenuItem>
