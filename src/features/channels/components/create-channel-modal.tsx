@@ -14,8 +14,10 @@ import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 import { useCreateChannel } from '../api/use-create-channel'
 import { useCreateChannelModal } from '../store/use-create-channel-modal'
+import { useRouter } from 'next/navigation'
 
 export const CreateChannelModal = () => {
+  const router = useRouter()
   const [open, setOpen] = useCreateChannelModal()
   const [name, setName] = useState('')
   const workspaceId = useWorkspaceId()
@@ -41,14 +43,21 @@ export const CreateChannelModal = () => {
         workspaceId,
       },
       {
-        onSuccess: () => {
+        onSuccess: (data) => {
           handleClose()
           toast({
             title: `Canal ${name} criado com sucesso.`,
             description: 'Você será redirecionado para o canal.',
           })
-          // TODO: Redirect
+          router.push(`/workspaces/${workspaceId}/channel/${data.channelId}`)
         },
+        onError: (error) => {
+          toast({
+            title: 'Erro ao criar canal.',
+            description: error.message,
+            variant: "destructive"
+          })
+        }
       },
     )
   }
