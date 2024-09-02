@@ -10,6 +10,7 @@ import {
 import React from 'react'
 
 import { useGetChannels } from '@/features/channels/api/use-get-channels'
+import { useCreateChannelModal } from '@/features/channels/store/use-create-channel-modal'
 import { useCurrentMember } from '@/features/members/api/use-current-member'
 import { useGetMembers } from '@/features/members/api/use-get-members'
 import { useGetWorkspaceById } from '@/features/workspaces/api/use-get-workspace-by-id'
@@ -36,6 +37,9 @@ export const WorkspaceSidebar = () => {
     workspaceId,
   })
   /* TODO: Loading States */
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_open, setOpen] = useCreateChannelModal()
 
   if (workspaceLoading || memberLoading) {
     return (
@@ -70,7 +74,11 @@ export const WorkspaceSidebar = () => {
           id="drafts"
         />
       </div>
-      <WorkspaceSection label="Canais" hint="Novo canal" onNew={() => {}}>
+      <WorkspaceSection
+        label="Canais"
+        hint="Novo canal"
+        onNew={member.role === 'admin' ? () => setOpen(true) : undefined}
+      >
         {channels?.map((item) => (
           <SidebarItem
             key={item._id}
