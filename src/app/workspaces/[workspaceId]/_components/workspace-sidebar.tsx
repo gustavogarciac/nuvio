@@ -14,16 +14,18 @@ import { useCreateChannelModal } from '@/features/channels/store/use-create-chan
 import { useCurrentMember } from '@/features/members/api/use-current-member'
 import { useGetMembers } from '@/features/members/api/use-get-members'
 import { useGetWorkspaceById } from '@/features/workspaces/api/use-get-workspace-by-id'
+import { useChannelId } from '@/hooks/use-channel-id'
+import { useMemberId } from '@/hooks/use-member-id'
 import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 import { SidebarItem } from './sidebar-item'
 import { UserItem } from './user-item'
 import { WorkspaceHeader } from './workspace-header'
 import { WorkspaceSection } from './workspace-section'
-import { useChannelId } from '@/hooks/use-channel-id'
 
 export const WorkspaceSidebar = () => {
   const channelId = useChannelId()
+  const memberId = useMemberId()
   const workspaceId = useWorkspaceId()
 
   const { data: member, isLoading: memberLoading } = useCurrentMember({
@@ -43,7 +45,7 @@ export const WorkspaceSidebar = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_open, setOpen] = useCreateChannelModal()
 
-  if (workspaceLoading || memberLoading) {
+  if (workspaceLoading || memberLoading || channelsLoading || membersLoading) {
     return (
       <div className="flex h-full flex-col items-center justify-center bg-indigo-400">
         <Loader className="size-5 animate-spin text-white" />
@@ -99,9 +101,10 @@ export const WorkspaceSidebar = () => {
         {members?.map((item) => (
           <UserItem
             key={item._id}
-            id={item.user._id}
+            id={item._id}
             image={item.user.image}
             label={item.user.name}
+            variant={item._id === memberId ? 'active' : 'default'}
           />
         ))}
       </WorkspaceSection>

@@ -6,7 +6,7 @@ import {
   isYesterday,
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Info, Loader } from 'lucide-react'
+import { Loader } from 'lucide-react'
 import React from 'react'
 
 import { useCurrentMember } from '@/features/members/api/use-current-member'
@@ -15,6 +15,7 @@ import { useWorkspaceId } from '@/hooks/use-workspace-id'
 
 import { Id } from '../../convex/_generated/dataModel'
 import { ChannelHero } from './channel-hero'
+import { ConversationHero } from './conversation-hero'
 import { Message } from './message'
 
 const TIME_THRESHOLD = 5
@@ -146,6 +147,9 @@ export const MessageList = ({
       )}
       {variant === 'channel' && channelName && channelCreationTime && (
         <ChannelHero name={channelName} creationTime={channelCreationTime} />
+      )}
+      {variant === 'conversation' && (
+        <ConversationHero name={memberName} image={memberImage} />
       )}
     </div>
   )

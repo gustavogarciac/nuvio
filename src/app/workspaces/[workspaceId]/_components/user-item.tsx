@@ -25,7 +25,7 @@ const userItemVariants = cva(
 )
 
 type Props = {
-  id: Id<'users'>
+  id: Id<'members'>
   label?: string
   image?: string
   variant?: VariantProps<typeof userItemVariants>['variant']
