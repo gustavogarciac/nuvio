@@ -6,7 +6,7 @@ import {
   isYesterday,
 } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Info } from 'lucide-react'
+import { Info, Loader } from 'lucide-react'
 import React from 'react'
 
 import { useCurrentMember } from '@/features/members/api/use-current-member'
@@ -118,7 +118,32 @@ export const MessageList = ({
           })}
         </div>
       ))}
+      <div
+        className="h-1"
+        ref={(el) => {
+          if (el) {
+            const observer = new IntersectionObserver(
+              ([entry]) => {
+                if (entry.isIntersecting && canLoadMore) {
+                  loadMore()
+                }
+              },
+              { threshold: 1.0 },
+            )
 
+            observer.observe(el)
+            return () => observer.disconnect()
+          }
+        }}
+      />
+      {isLoadingMore && (
+        <div className="relative my-2 text-center">
+          <hr className="absolute left-0 right-0 top-1/2 border-t border-gray-200" />
+          <span className="relative inline-block rounded-full border border-gray-300 bg-white px-4 py-1 text-xs shadow-sm">
+            <Loader className="size-4 animate-spin" />
+          </span>
+        </div>
+      )}
       {variant === 'channel' && channelName && channelCreationTime && (
         <ChannelHero name={channelName} creationTime={channelCreationTime} />
       )}
