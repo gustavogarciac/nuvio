@@ -63,7 +63,7 @@ export const Message = ({
         <div className="flex items-start gap-2">
           <Hint label={formatFullTime(new Date(createdAt))}>
             <button className="w-[40px] text-center text-xs leading-[22px] text-muted-foreground opacity-0 hover:underline group-hover:opacity-100">
-              {format(new Date(createdAt), 'hh:mm')}
+              {format(new Date(createdAt), 'HH:mm')}
             </button>
           </Hint>
           <div className="flex w-full flex-col">
