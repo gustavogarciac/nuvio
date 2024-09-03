@@ -4,12 +4,14 @@ import React from 'react'
 
 import { useRemoveMessage } from '@/features/messages/api/use-remove-message'
 import { useUpdateMessage } from '@/features/messages/api/use-update-message'
+import { useToggleReaction } from '@/features/reactions/api/use-toggle-reaction'
 import { useConfirm } from '@/hooks/use-confirm'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
 import { Doc, Id } from '../../convex/_generated/dataModel'
 import { Hint } from './hint'
+import { Reactions } from './reactions'
 import { Thumbnail } from './thumbnail'
 import { Toolbar } from './toolbar'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -75,8 +77,23 @@ export const Message = ({
     useUpdateMessage()
   const { mutate: removeMessage, isPending: isRemovingMessage } =
     useRemoveMessage()
+  const { mutate: toggleReaction, isPending: isTogglingReaction } =
+    useToggleReaction()
 
   const isPending = isUpdatingMessage
+
+  const handleReaction = (value: string) => {
+    toggleReaction(
+      { messageId: id, value },
+      {
+        onError: () => {
+          toast({
+            title: 'Erro ao reagir à mensagem.',
+          })
+        },
+      },
+    )
+  }
 
   const handleUpdate = ({ body }: { body: string }) => {
     updateMessage(
@@ -131,7 +148,7 @@ export const Message = ({
             'group relative flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60',
             isEditing && 'bg-indigo-100 hover:bg-indigo-100',
             isRemovingMessage &&
-              'origin-bottom scale-y-0 transform bg-rose-500/50 transition-all duration-200',
+              'origin-bottom scale-y-0 transform bg-rose-500/50 transition-all duration-500',
           )}
         >
           <div className="flex items-start gap-2">
@@ -161,6 +178,7 @@ export const Message = ({
                     (editado)
                   </span>
                 ) : null}
+                <Reactions data={reactions} onChange={handleReaction} />
               </div>
             )}
           </div>
@@ -172,7 +190,7 @@ export const Message = ({
               handleEdit={() => setEditingId(id)}
               handleThread={() => {}}
               handleDelete={handleDelete}
-              handleReaction={() => {}}
+              handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
             />
           )}
@@ -237,6 +255,7 @@ export const Message = ({
               {updatedAt ? (
                 <span className="text-xs text-muted-foreground">(editado)</span>
               ) : null}
+              <Reactions data={reactions} onChange={handleReaction} />
             </div>
           )}
         </div>
@@ -248,7 +267,7 @@ export const Message = ({
             handleEdit={() => setEditingId(id)}
             handleThread={() => {}}
             handleDelete={handleDelete}
-            handleReaction={() => {}}
+            handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
           />
         )}
