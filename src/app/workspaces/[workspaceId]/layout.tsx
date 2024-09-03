@@ -8,6 +8,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from '@/components/ui/resizable'
+import { Profile } from '@/features/members/components/profile'
 import { Thread } from '@/features/messages/components/thread'
 import { usePanel } from '@/hooks/use-panel'
 
@@ -21,9 +22,10 @@ type Props = {
 }
 
 const WorkspaceIdLayout = ({ children }: Props) => {
-  const { parentMessageId, onCloseMessage } = usePanel()
+  const { parentMessageId, onCloseMessage, profileMemberId, onCloseProfile } =
+    usePanel()
 
-  const showPanel = !!parentMessageId
+  const showPanel = !!parentMessageId || !!profileMemberId
 
   return (
     <div className="h-full">
@@ -53,6 +55,11 @@ const WorkspaceIdLayout = ({ children }: Props) => {
                   <Thread
                     messageId={parentMessageId as Id<'messages'>}
                     onClose={onCloseMessage}
+                  />
+                ) : profileMemberId ? (
+                  <Profile
+                    memberId={profileMemberId as Id<'members'>}
+                    onClose={onCloseProfile}
                   />
                 ) : (
                   <div className="flex h-full items-center justify-center">

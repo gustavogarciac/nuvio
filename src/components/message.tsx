@@ -23,6 +23,7 @@ const Editor = dynamic(() => import('./editor'), { ssr: false })
 
 interface MessageProps {
   id: Id<'messages'>
+  memberId: Id<'members'>
   authorImage?: string
   authorName?: string
   isAuthor: boolean
@@ -48,6 +49,7 @@ interface MessageProps {
 
 export const Message = ({
   id,
+  memberId,
   authorImage,
   authorName,
   isAuthor,
@@ -65,7 +67,8 @@ export const Message = ({
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
-  const { onOpenMessage, parentMessageId, onCloseMessage } = usePanel()
+  const { onOpenMessage, parentMessageId, onCloseMessage, onOpenProfile } =
+    usePanel()
 
   const formatFullTime = (date: Date) => {
     return `${isToday(date) ? 'Hoje' : isYesterday(date) ? 'Ontem' : format(date, 'dd/MM/yyyy')} às ${format(date, 'HH:mm')}`
@@ -225,7 +228,7 @@ export const Message = ({
         )}
       >
         <div className="flex items-start gap-2">
-          <button>
+          <button onClick={() => onOpenProfile(memberId)}>
             <Avatar className="rounded-md">
               <AvatarImage
                 className="rounded-md object-cover"
@@ -250,7 +253,7 @@ export const Message = ({
             <div className="flex w-full flex-col overflow-hidden">
               <div className="text-sm">
                 <button
-                  onClick={() => {}}
+                  onClick={() => onOpenProfile(memberId)}
                   className="font-bold text-primary hover:underline"
                 >
                   {authorName}
