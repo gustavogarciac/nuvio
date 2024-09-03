@@ -6,6 +6,7 @@ import { useRemoveMessage } from '@/features/messages/api/use-remove-message'
 import { useUpdateMessage } from '@/features/messages/api/use-update-message'
 import { useToggleReaction } from '@/features/reactions/api/use-toggle-reaction'
 import { useConfirm } from '@/hooks/use-confirm'
+import { usePanel } from '@/hooks/use-panel'
 import { useToast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 
@@ -63,6 +64,8 @@ export const Message = ({
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
+  const { onOpenMessage, onClose } = usePanel()
+
   const formatFullTime = (date: Date) => {
     return `${isToday(date) ? 'Hoje' : isYesterday(date) ? 'Ontem' : format(date, 'dd/MM/yyyy')} às ${format(date, 'HH:mm')}`
   }
@@ -124,11 +127,14 @@ export const Message = ({
         id,
       },
       {
-        onSuccess: () => {
+        onSuccess: ({ messageId }) => {
           toast({
             title: 'Mensagem deletada',
           })
-          // TODO: Close thread if opened
+
+          if (parentMessageId === messageId) {
+            onClose()
+          }
         },
         onError: () => {
           toast({
@@ -188,7 +194,7 @@ export const Message = ({
               isAuthor={isAuthor}
               isPending={isPending}
               handleEdit={() => setEditingId(id)}
-              handleThread={() => {}}
+              handleThread={() => onOpenMessage(id)}
               handleDelete={handleDelete}
               handleReaction={handleReaction}
               hideThreadButton={hideThreadButton}
@@ -265,7 +271,7 @@ export const Message = ({
             isAuthor={isAuthor}
             isPending={false}
             handleEdit={() => setEditingId(id)}
-            handleThread={() => {}}
+            handleThread={() => onOpenMessage(id)}
             handleDelete={handleDelete}
             handleReaction={handleReaction}
             hideThreadButton={hideThreadButton}
