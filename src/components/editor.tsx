@@ -154,10 +154,10 @@ const Editor = ({
     }
   }
 
-  function onEmojiSelect(emoji: { native: string }) {
+  function onEmojiSelect(emojiValue: string) {
     const quill = quillRef.current
 
-    quill?.insertText(quill?.getSelection()?.index ?? 0, emoji.native)
+    quill?.insertText(quill?.getSelection()?.index ?? 0, emojiValue)
   }
 
   return (
