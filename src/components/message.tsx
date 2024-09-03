@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils'
 import { Doc, Id } from '../../convex/_generated/dataModel'
 import { Hint } from './hint'
 import { Reactions } from './reactions'
+import { ThreadBar } from './thread-bar'
 import { Thumbnail } from './thumbnail'
 import { Toolbar } from './toolbar'
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar'
@@ -22,7 +23,6 @@ const Editor = dynamic(() => import('./editor'), { ssr: false })
 
 interface MessageProps {
   id: Id<'messages'>
-  memberId: Id<'members'>
   authorImage?: string
   authorName?: string
   isAuthor: boolean
@@ -42,12 +42,12 @@ interface MessageProps {
   hideThreadButton?: boolean
   threadCount?: number
   threadImage?: string
+  threadName?: string
   threadTimestamp?: number
 }
 
 export const Message = ({
   id,
-  memberId,
   authorImage,
   authorName,
   isAuthor,
@@ -61,10 +61,11 @@ export const Message = ({
   setEditingId,
   hideThreadButton,
   threadCount,
+  threadName,
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
-  const { onOpenMessage, onClose } = usePanel()
+  const { onOpenMessage, parentMessageId, onCloseMessage } = usePanel()
 
   const formatFullTime = (date: Date) => {
     return `${isToday(date) ? 'Hoje' : isYesterday(date) ? 'Ontem' : format(date, 'dd/MM/yyyy')} às ${format(date, 'HH:mm')}`
@@ -83,7 +84,7 @@ export const Message = ({
   const { mutate: toggleReaction, isPending: isTogglingReaction } =
     useToggleReaction()
 
-  const isPending = isUpdatingMessage
+  const isPending = isUpdatingMessage || isRemovingMessage || isTogglingReaction
 
   const handleReaction = (value: string) => {
     toggleReaction(
@@ -133,7 +134,7 @@ export const Message = ({
           })
 
           if (parentMessageId === messageId) {
-            onClose()
+            onCloseMessage()
           }
         },
         onError: () => {
@@ -185,6 +186,13 @@ export const Message = ({
                   </span>
                 ) : null}
                 <Reactions data={reactions} onChange={handleReaction} />
+                <ThreadBar
+                  count={threadCount}
+                  image={threadImage}
+                  name={threadName}
+                  timestamp={threadTimestamp}
+                  onClick={() => onOpenMessage(id)}
+                />
               </div>
             )}
           </div>
@@ -262,6 +270,13 @@ export const Message = ({
                 <span className="text-xs text-muted-foreground">(editado)</span>
               ) : null}
               <Reactions data={reactions} onChange={handleReaction} />
+              <ThreadBar
+                count={threadCount}
+                image={threadImage}
+                name={threadName}
+                timestamp={threadTimestamp}
+                onClick={() => onOpenMessage(id)}
+              />
             </div>
           )}
         </div>

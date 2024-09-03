@@ -282,6 +282,7 @@ export const Thread = ({ messageId, onClose }: ThreadProps) => {
           reactions={message.reactions}
           isEditing={editingId === message._id}
           setEditingId={setEditingId}
+          threadName={message.threadName}
         />
       </div>
       <div className="px-4">
