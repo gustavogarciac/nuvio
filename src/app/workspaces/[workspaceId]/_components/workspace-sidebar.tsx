@@ -40,7 +40,6 @@ export const WorkspaceSidebar = () => {
   const { data: members, isLoading: membersLoading } = useGetMembers({
     workspaceId,
   })
-  /* TODO: Loading States */
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_open, setOpen] = useCreateChannelModal()
