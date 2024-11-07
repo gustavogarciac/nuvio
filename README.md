@@ -4,7 +4,7 @@ Nuvio is a modern, feature-rich communication and collaboration platform inspire
 
 ## ✨ Live Preview
 
-You can access the live preview clicking [here]().
+You can access the live preview clicking [here](https://nuvio.vercel.app).
 
 ## Preview
 
